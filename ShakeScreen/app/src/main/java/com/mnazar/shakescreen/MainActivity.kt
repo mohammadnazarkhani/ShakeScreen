@@ -5,10 +5,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
-import androidx.compose.material.icons.filled.Security
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.filled.*
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.LayoutDirection
+import java.util.Locale
 import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
 import android.content.Intent
@@ -22,6 +22,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.mnazar.shakescreen.ui.theme.ShakeScreenTheme
+import androidx.core.content.edit
 
 class MainActivity : ComponentActivity() {
 
@@ -30,6 +31,7 @@ class MainActivity : ComponentActivity() {
 
     private var isAdminActive by mutableStateOf(false)
     private var serviceRunning by mutableStateOf(false)
+    private var showAboutDialog by mutableStateOf(false)
 
     // Launcher for requesting Device Admin permission
     private val deviceAdminLauncher = registerForActivityResult(
@@ -46,15 +48,21 @@ class MainActivity : ComponentActivity() {
 
         refreshAdminStatus()
 
+        serviceRunning = getSharedPreferences("shake_prefs", MODE_PRIVATE)
+            .getBoolean("service_running", false)
+
         setContent {
             ShakeScreenTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     PermissionAndStatusScreen(
                         isAdminActive = isAdminActive,
                         serviceRunning = serviceRunning,
+                        showAboutDialog = showAboutDialog,
                         onRequestDeviceAdmin = { requestDeviceAdmin() },
                         onStartService = { startShakeService() },
-                        onStopService = { stopShakeService() }
+                        onStopService = { stopShakeService() },
+                        onShowAbout = { showAboutDialog = true },
+                        onDismissAbout = { showAboutDialog = false }
                     )
                 }
             }
@@ -81,21 +89,33 @@ class MainActivity : ComponentActivity() {
             startService(intent)
         }
         serviceRunning = true
+        getSharedPreferences("shake_prefs", MODE_PRIVATE)
+            .edit {
+                putBoolean("service_running", true)
+            }
     }
 
     private fun stopShakeService() {
         stopService(Intent(this, ShakeForegroundService::class.java))
         serviceRunning = false
+        getSharedPreferences("shake_prefs", MODE_PRIVATE)
+            .edit {
+                putBoolean("service_running", false)
+            }
     }
+
 }
 
 @Composable
 fun PermissionAndStatusScreen(
     isAdminActive: Boolean,
     serviceRunning: Boolean,
+    showAboutDialog: Boolean,
     onRequestDeviceAdmin: () -> Unit,
     onStartService: () -> Unit,
-    onStopService: () -> Unit
+    onStopService: () -> Unit,
+    onShowAbout: () -> Unit,
+    onDismissAbout: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -187,6 +207,62 @@ fun PermissionAndStatusScreen(
                     Text(if (serviceRunning) "Stop Service" else "Start Service")
                 }
             }
+        }
+
+        // About Button
+        Button(
+            onClick = onShowAbout,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer
+            )
+        ) {
+            Icon(Icons.Default.Info, contentDescription = null)
+            Spacer(Modifier.width(8.dp))
+            Text("About")
+        }
+
+        // About Dialog
+        if (showAboutDialog) {
+            AlertDialog(
+                onDismissRequest = onDismissAbout,
+                title = {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Default.Info, contentDescription = null)
+                        Spacer(Modifier.width(8.dp))
+                        Text("About ShakeScreen")
+                    }
+                },
+                text = {
+                    Column(
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Text(
+                            text = "Developed by Mohammad Nazarkhani",
+                            textAlign = TextAlign.Left,
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "Need help? Contact support at:",
+                            textAlign = TextAlign.Left,
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "sprt.mnazar.apps@outlook.com",
+                            textAlign = TextAlign.Left,
+                        )
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = onDismissAbout) {
+                        Text("Close")
+                    }
+                }
+            )
         }
     }
 }
