@@ -9,12 +9,12 @@ import android.widget.Toast
 class MyDeviceAdminReceiver : DeviceAdminReceiver() {
 
     companion object {
-        private const val TAG = "DeviceAdminReceiver"
+        private const val TAG = "tag_device_admin"
     }
 
     override fun onEnabled(context: Context, intent: Intent) {
         Log.d(TAG, "Device Admin enabled")
-        Toast.makeText(context, "Device Admin enabled - Screen lock available", Toast.LENGTH_LONG)
+        Toast.makeText(context, context.getString(R.string.admin_enabled_toast), Toast.LENGTH_LONG)
             .show()
     }
 
@@ -22,13 +22,13 @@ class MyDeviceAdminReceiver : DeviceAdminReceiver() {
         Log.d(TAG, "Device Admin disabled")
         Toast.makeText(
             context,
-            "Device Admin disabled - Screen lock unavailable",
+            context.getString(R.string.admin_disabled_toast),
             Toast.LENGTH_LONG
         ).show()
     }
 
     override fun onDisableRequested(context: Context, intent: Intent): CharSequence {
         Log.d(TAG, "Device Admin disable requested")
-        return "Disabling device admin will prevent the shake-to-wake app from locking the screen"
+        return context.getString(R.string.admin_disable_warning)
     }
 }

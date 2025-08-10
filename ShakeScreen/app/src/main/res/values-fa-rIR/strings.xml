@@ -1,0 +1,63 @@
+<resources>
+    <string name="app_name">تکان‌اسکرین</string>
+
+    <!-- Main Activity -->
+    <string name="device_admin_enabled">مدیر دستگاه فعال است</string>
+    <string name="device_admin_not_granted">مجوز مدیر دستگاه داده نشده است</string>
+    <string name="grant_device_admin">اعطای مجوز مدیر دستگاه</string>
+    <string name="device_admin_explanation">برای قفل و روشن کردن صفحه لازم است</string>
+    <string name="service_running">سرویس تکان فعال است</string>
+    <string name="service_stopped">سرویس تکان متوقف شده است</string>
+    <string name="stop_service">توقف سرویس</string>
+    <string name="start_service">شروع سرویس</string>
+    <string name="about">درباره</string>
+    <string name="about_title">درباره تکان‌اسکرین</string>
+    <string name="developed_by">توسعه‌دهنده: محمد نظرخانی</string>
+    <string name="contact_support">نیاز به کمک دارید؟ با پشتیبانی تماس بگیرید:</string>
+    <string name="support_email">sprt.mnazar.apps@outlook.com</string>
+    <string name="close">بستن</string>
+
+    <!-- Device Admin Receiver -->
+    <string name="admin_enabled_toast">مدیر دستگاه فعال شد - قفل صفحه در دسترس است</string>
+    <string name="admin_disabled_toast">مدیر دستگاه غیرفعال شد - قفل صفحه در دسترس نیست</string>
+    <string name="admin_disable_warning">غیرفعال کردن مدیر دستگاه باعث می‌شود برنامه تکان برای قفل کردن صفحه کار نکند</string>
+
+    <!-- Shake Service -->
+    <string name="notification_channel_name">سرویس قفل با تکان</string>
+    <string name="notification_channel_description">کنترل تشخیص تکان و ارائه دسترسی سریع به قفل صفحه</string>
+    <string name="notification_title">🔐 قفل با تکان</string>
+    <string name="notification_text">برای قفل فوری صفحه لمس کنید • با تکان دادن، صفحه را روشن و قفل کنید</string>
+    <string name="notification_big_text">برای قفل فوری صفحه خود این اعلان را لمس کنید.\n\nبا تکان دادن دستگاه، صفحه به‌طور موقت روشن و سپس خودکار قفل می‌شود.</string>
+    <string name="error_notification_title">⚠️ نیاز به مجوز</string>
+    <string name="error_notification_text">برای قفل صفحه نیاز به مجوز مدیر دستگاه دارید</string>
+
+    <!-- Log Tags -->
+    <string name="tag_device_admin" translatable="false">DeviceAdminReceiver</string>
+    <string name="tag_shake_detector" translatable="false">ShakeDetector</string>
+    <string name="tag_shake_service" translatable="false">ShakeService</string>
+    <string name="tag_boot_receiver" translatable="false">BootReceiver</string>
+
+    <!-- Log Messages -->
+    <string name="log_shake_detection_started">تشخیص تکان شروع شد</string>
+    <string name="log_shake_detection_stopped">تشخیص تکان متوقف شد</string>
+    <string name="log_accelerometer_failed">ثبت شنونده شتاب‌سنج انجام نشد</string>
+    <string name="log_no_accelerometer">شتاب‌سنج موجود نیست</string>
+    <string name="log_shake_detected">تکان شناسایی شد! دلتا: %1$f</string>
+    <string name="log_accuracy_changed">دقت سنسور تغییر کرد: %1$d</string>
+    <string name="log_screen_locked">صفحه با موفقیت قفل شد</string>
+    <string name="log_lock_failed">قفل کردن صفحه ناموفق بود</string>
+    <string name="log_service_restart">راه‌اندازی مجدد سرویس تکان پس از بوت…</string>
+    <string name="log_admin_inactive">مجوز مدیر دستگاه فعال نیست، امکان شروع سرویس وجود ندارد</string>
+    <string name="log_admin_not_active">مدیر دستگاه فعال نیست - امکان قفل صفحه وجود ندارد</string>
+    <string name="log_lock_screen_failed">قفل کردن صفحه ناموفق بود</string>
+
+    <!-- Constants -->
+    <string name="action_lock_screen" translatable="false">com.mnazar.shakescreen.ACTION_LOCK_SCREEN</string>
+
+    <!-- Wake Lock Tag -->
+    <string name="wakelock_tag" translatable="false">ShakeScreen:ServiceWakeLock</string>
+
+    <!-- Preferences Keys -->
+    <string name="pref_service_running" translatable="false">service_running</string>
+    <string name="pref_file_name" translatable="false">shake_prefs</string>
+</resources>

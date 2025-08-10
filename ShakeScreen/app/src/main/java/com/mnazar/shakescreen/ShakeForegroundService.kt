@@ -16,9 +16,9 @@ import androidx.core.app.NotificationCompat
 class ShakeForegroundService : Service() {
 
     companion object {
-        const val CHANNEL_ID = "shake_service_channel"
+        const val CHANNEL_ID = "shake_service_channel" // This is an internal constant, no need to extract
         const val NOTIFICATION_ID = 1
-        const val ACTION_LOCK_SCREEN = "com.mnazar.shakescreen.ACTION_LOCK_SCREEN"
+        const val ACTION_LOCK_SCREEN = "com.mnazar.shakescreen.LOCK_SCREEN"
     }
 
     private lateinit var shakeDetector: ShakeDetector
@@ -39,7 +39,7 @@ class ShakeForegroundService : Service() {
         @Suppress("DEPRECATION")
         wakeLock = powerManager.newWakeLock(
             PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
-            "ShakeScreen:ServiceWakeLock"
+            getString(R.string.wakelock_tag)
         )
 
         shakeDetector = ShakeDetector(sensorManager) {
@@ -84,8 +84,8 @@ class ShakeForegroundService : Service() {
         )
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("🔐 Shake to Lock")
-            .setContentText("Tap here to instantly lock screen • Shake device to wake & lock")
+            .setContentTitle(getString(R.string.notification_title))
+            .setContentText(getString(R.string.notification_text))
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentIntent(clickPendingIntent) // Make the entire notification clickable
             .setOngoing(true)
@@ -93,7 +93,7 @@ class ShakeForegroundService : Service() {
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setAutoCancel(false) // Don't dismiss when clicked
             .setStyle(NotificationCompat.BigTextStyle()
-                .bigText("Tap this notification to instantly lock your screen.\n\nShake your device to wake screen briefly then lock it automatically."))
+                .bigText(getString(R.string.notification_big_text)))
             .build()
     }
 
@@ -101,10 +101,10 @@ class ShakeForegroundService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "Shake to Lock Service",
+                getString(R.string.notification_channel_name),
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Controls shake detection and provides quick screen lock access"
+                description = getString(R.string.notification_channel_description)
                 setShowBadge(false)
                 enableVibration(false)
                 setSound(null, null)
@@ -122,23 +122,23 @@ class ShakeForegroundService : Service() {
 
             if (devicePolicyManager.isAdminActive(compName)) {
                 devicePolicyManager.lockNow()
-                android.util.Log.d("ShakeService", "Screen locked successfully")
+                android.util.Log.d(getString(R.string.tag_shake_service), getString(R.string.log_screen_locked))
             } else {
-                android.util.Log.w("ShakeService", "Device Admin not active - cannot lock screen")
+                android.util.Log.w(getString(R.string.tag_shake_service), getString(R.string.log_admin_not_active))
 
                 // Update notification to show error state
                 updateNotificationWithError()
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            android.util.Log.e("ShakeService", "Failed to lock screen", e)
+            android.util.Log.e(getString(R.string.tag_shake_service), getString(R.string.log_lock_screen_failed), e)
         }
     }
 
     private fun updateNotificationWithError() {
         val errorNotification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("⚠️ Permission Required")
-            .setContentText("Device Admin permission needed to lock screen")
+            .setContentTitle(getString(R.string.error_notification_title))
+            .setContentText(getString(R.string.error_notification_text))
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setOngoing(true)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

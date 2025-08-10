@@ -7,7 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.res.stringResource
+import android.view.View
 import java.util.Locale
 import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
@@ -23,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.mnazar.shakescreen.ui.theme.ShakeScreenTheme
 import androidx.core.content.edit
+import androidx.core.text.layoutDirection
 
 class MainActivity : ComponentActivity() {
 
@@ -48,8 +50,8 @@ class MainActivity : ComponentActivity() {
 
         refreshAdminStatus()
 
-        serviceRunning = getSharedPreferences("shake_prefs", MODE_PRIVATE)
-            .getBoolean("service_running", false)
+        serviceRunning = getSharedPreferences(getString(R.string.pref_file_name), MODE_PRIVATE)
+            .getBoolean(getString(R.string.pref_service_running), false)
 
         setContent {
             ShakeScreenTheme {
@@ -76,7 +78,7 @@ class MainActivity : ComponentActivity() {
     private fun requestDeviceAdmin() {
         val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).apply {
             putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminComponentName)
-            putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "Required to lock and wake the screen")
+            putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, getString(R.string.device_admin_explanation))
         }
         deviceAdminLauncher.launch(intent)
     }
@@ -89,18 +91,18 @@ class MainActivity : ComponentActivity() {
             startService(intent)
         }
         serviceRunning = true
-        getSharedPreferences("shake_prefs", MODE_PRIVATE)
+        getSharedPreferences(getString(R.string.pref_file_name), MODE_PRIVATE)
             .edit {
-                putBoolean("service_running", true)
+                putBoolean(getString(R.string.pref_service_running), true)
             }
     }
 
     private fun stopShakeService() {
         stopService(Intent(this, ShakeForegroundService::class.java))
         serviceRunning = false
-        getSharedPreferences("shake_prefs", MODE_PRIVATE)
+        getSharedPreferences(getString(R.string.pref_file_name), MODE_PRIVATE)
             .edit {
-                putBoolean("service_running", false)
+                putBoolean(getString(R.string.pref_service_running), false)
             }
     }
 
@@ -148,7 +150,7 @@ fun PermissionAndStatusScreen(
                 )
                 Spacer(Modifier.height(12.dp))
                 Text(
-                    text = if (isAdminActive) "Device Admin Enabled" else "Device Admin Not Granted",
+                    text = if (isAdminActive) stringResource(R.string.device_admin_enabled) else stringResource(R.string.device_admin_not_granted),
                     style = MaterialTheme.typography.titleMedium
                 )
             }
@@ -163,7 +165,7 @@ fun PermissionAndStatusScreen(
             ) {
                 Icon(Icons.Default.Security, contentDescription = null)
                 Spacer(Modifier.width(8.dp))
-                Text("Grant Device Admin Permission")
+                Text(stringResource(R.string.grant_device_admin))
             }
         }
 
@@ -187,7 +189,7 @@ fun PermissionAndStatusScreen(
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    text = if (serviceRunning) "Shake Service Running" else "Shake Service Stopped",
+                    text = if (serviceRunning) stringResource(R.string.service_running) else stringResource(R.string.service_stopped),
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Spacer(Modifier.height(12.dp))
@@ -204,7 +206,7 @@ fun PermissionAndStatusScreen(
                         contentDescription = null
                     )
                     Spacer(Modifier.width(8.dp))
-                    Text(if (serviceRunning) "Stop Service" else "Start Service")
+                    Text(if (serviceRunning) stringResource(R.string.stop_service) else stringResource(R.string.start_service))
                 }
             }
         }
@@ -219,7 +221,7 @@ fun PermissionAndStatusScreen(
         ) {
             Icon(Icons.Default.Info, contentDescription = null)
             Spacer(Modifier.width(8.dp))
-            Text("About")
+            Text(stringResource(R.string.about))
         }
 
         // About Dialog
@@ -234,32 +236,39 @@ fun PermissionAndStatusScreen(
                     ) {
                         Icon(Icons.Default.Info, contentDescription = null)
                         Spacer(Modifier.width(8.dp))
-                        Text("About ShakeScreen")
+                        Text(stringResource(R.string.about_title))
                     }
                 },
                 text = {
+                    val configuration = android.content.res.Configuration()
+                    configuration.setLocale(Locale.getDefault())
+                    val isRtl = configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
                     Column(
-                        horizontalAlignment = Alignment.Start
+                        horizontalAlignment = if (isRtl) Alignment.End else Alignment.Start,
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = "Developed by Mohammad Nazarkhani",
-                            textAlign = TextAlign.Left,
+                            text = stringResource(R.string.developed_by),
+                            textAlign = if (isRtl) TextAlign.Right else TextAlign.Left,
+                            modifier = Modifier.fillMaxWidth()
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = "Need help? Contact support at:",
-                            textAlign = TextAlign.Left,
+                            text = stringResource(R.string.contact_support),
+                            textAlign = if (isRtl) TextAlign.Right else TextAlign.Left,
+                            modifier = Modifier.fillMaxWidth()
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "sprt.mnazar.apps@outlook.com",
-                            textAlign = TextAlign.Left,
+                            text = stringResource(R.string.support_email),
+                            textAlign = if (isRtl) TextAlign.Right else TextAlign.Left,
+                            modifier = Modifier.fillMaxWidth()
                         )
                     }
                 },
                 confirmButton = {
                     TextButton(onClick = onDismissAbout) {
-                        Text("Close")
+                        Text(stringResource(R.string.close))
                     }
                 }
             )

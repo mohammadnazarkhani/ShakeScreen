@@ -1,3 +1,63 @@
 <resources>
     <string name="app_name">ShakeScreen</string>
+    
+    <!-- Main Activity -->
+    <string name="device_admin_enabled">Device Admin Enabled</string>
+    <string name="device_admin_not_granted">Device Admin Not Granted</string>
+    <string name="grant_device_admin">Grant Device Admin Permission</string>
+    <string name="device_admin_explanation">Required to lock and wake the screen</string>
+    <string name="service_running">Shake Service Running</string>
+    <string name="service_stopped">Shake Service Stopped</string>
+    <string name="stop_service">Stop Service</string>
+    <string name="start_service">Start Service</string>
+    <string name="about">About</string>
+    <string name="about_title">About ShakeScreen</string>
+    <string name="developed_by">Developed by Mohammad Nazarkhani</string>
+    <string name="contact_support">Need help? Contact support at:</string>
+    <string name="support_email">sprt.mnazar.apps@outlook.com</string>
+    <string name="close">Close</string>
+
+    <!-- Device Admin Receiver -->
+    <string name="admin_enabled_toast">Device Admin enabled - Screen lock available</string>
+    <string name="admin_disabled_toast">Device Admin disabled - Screen lock unavailable</string>
+    <string name="admin_disable_warning">Disabling device admin will prevent the shake-to-wake app from locking the screen</string>
+
+    <!-- Shake Service -->
+    <string name="notification_channel_name">Shake to Lock Service</string>
+    <string name="notification_channel_description">Controls shake detection and provides quick screen lock access</string>
+    <string name="notification_title">🔐 Shake to Lock</string>
+    <string name="notification_text">Tap here to instantly lock screen • Shake device to wake &amp; lock</string>
+    <string name="notification_big_text">Tap this notification to instantly lock your screen.\n\nShake your device to wake screen briefly then lock it automatically.</string>
+    <string name="error_notification_title">⚠️ Permission Required</string>
+    <string name="error_notification_text">Device Admin permission needed to lock screen</string>
+
+    <!-- Log Tags -->
+    <string name="tag_device_admin" translatable="false">DeviceAdminReceiver</string>
+    <string name="tag_shake_detector" translatable="false">ShakeDetector</string>
+    <string name="tag_shake_service" translatable="false">ShakeService</string>
+    <string name="tag_boot_receiver" translatable="false">BootReceiver</string>
+
+    <!-- Log Messages -->
+    <string name="log_shake_detection_started">Shake detection started</string>
+    <string name="log_shake_detection_stopped">Shake detection stopped</string>
+    <string name="log_accelerometer_failed">Failed to register accelerometer listener</string>
+    <string name="log_no_accelerometer">No accelerometer sensor available</string>
+    <string name="log_shake_detected">Shake detected! Delta: %1$f</string>
+    <string name="log_accuracy_changed">Sensor accuracy changed: %1$d</string>
+    <string name="log_screen_locked">Screen locked successfully</string>
+    <string name="log_lock_failed">Failed to lock screen</string>
+    <string name="log_service_restart">Restarting shake service after boot…</string>
+    <string name="log_admin_inactive">Device admin permission is not active, can\'t start service</string>
+    <string name="log_admin_not_active">Device Admin not active - cannot lock screen</string>
+    <string name="log_lock_screen_failed">Failed to lock screen</string>
+    
+    <!-- Constants -->
+    <string name="action_lock_screen" translatable="false">com.mnazar.shakescreen.ACTION_LOCK_SCREEN</string>
+
+    <!-- Wake Lock Tag -->
+    <string name="wakelock_tag" translatable="false">ShakeScreen:ServiceWakeLock</string>
+
+    <!-- Preferences Keys -->
+    <string name="pref_service_running" translatable="false">service_running</string>
+    <string name="pref_file_name" translatable="false">shake_prefs</string>
 </resources>
