@@ -1,6 +1,6 @@
 # ShakeScreen
 
-An Android app that lets you control your device's screen state with a simple shake gesture. Lock or wake your device effortlessly using motion detection.
+An Android app that lets you control your device's screen state with a simple shake gesture. Lock with clicking on sticky notification or wake your device effortlessly using motion detection.
 
 ## Features
 
